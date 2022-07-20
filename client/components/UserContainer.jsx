@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginRequest } from '../reducers/loginSlice';
-import { usePostUserQuery } from '../reducers/apiSlice';
+import { usePostUserMutation } from '../reducers/apiSlice';
 
 
 
@@ -34,7 +34,7 @@ function Login () {
     //then, with the query, we can render what we want to render based on a boolean on whether a user is logged in
     //we can still use the dispatch, but change the payload to a boolean expression
 
-    isLoggedIn = useSelector((state) => state.login.isLoggedIn);
+    let isLoggedIn = useSelector((state) => state.login.isLoggedIn);
 
     let usernameValue;
     const getUsernameValue = () => {
@@ -48,17 +48,17 @@ function Login () {
         return passValue;
     }
 
-    const dispatchInfo = (isLoggedIn) => {
+    const dispatchInfo = () => {
         useDispatch({type: loginRequest.toString(), payload: {isLoggedIn: true}})
     } 
 
     const {
-        data: usersHistory,
+        data: loggedinStr,
         isLoading,
         isSuccess,
         isError,
         error,
-    } = usePostUserQuery(usernameValue, passValue);
+    } = usePostUserMutation(usernameValue, passValue);
 
     if (isLoading) {
         content = <p> Is Loading... </p>
@@ -67,7 +67,7 @@ function Login () {
     if (isSuccess) {
         dispatchInfo({isLoggedIn: true});
         if (isLoggedIn) {
-            content = <p>Successfully Logged in </p>
+            content = <p> {loggedinStr} </p>
             //plan on setting this to a button to display history or just history without button
         }
         else {
@@ -76,7 +76,7 @@ function Login () {
     }
     
     if (isError) {
-        content = <p> Username and/or password is incorrect </p>
+        content = <p> Error in logging in </p>
     }
 
     return (

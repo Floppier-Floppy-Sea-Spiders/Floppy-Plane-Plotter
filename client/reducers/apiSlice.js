@@ -15,7 +15,7 @@ export const apiSlice = createApi({
     
     postUser: builder.mutation({
     //backend expecting body to be an obj with 2 properties, being 'username' and 'password' to endpoint called /login
-      query: (username,password) => ({
+      query: (username, password) => ({
         url: '/login',
         method: "POST",
         body: {
@@ -32,7 +32,7 @@ export const apiSlice = createApi({
 // they handle asynchronicity for you and are extremely simple to write. the naming is automatic:
 // "use" + your constructed query, capitalized "GetPlanes" + Query
 //  if you built a chaseDucks endpoint after getPlanes, it would need to be exported here as useChaseDucksQuery
-export const { useGetPlanesQuery, usePostUserQuery } = apiSlice;
+export const { useGetPlanesQuery, usePostUserMutation } = apiSlice;
 
 /* read more about how this works and why it's so useful here: https://redux.js.org/tutorials/essentials/part-7-rtk-query-basics
 
