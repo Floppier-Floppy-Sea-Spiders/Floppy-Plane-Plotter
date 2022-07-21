@@ -6,6 +6,7 @@ import './scss/App.scss';
 // import two components
 import DisplayBox from './components/DisplayBox';
 import InputBox from './components/InputBox';
+import Login from './components/UserContainer';
 
 function App(){
 
@@ -23,6 +24,10 @@ function App(){
 
       <div id="displayBox" className="displayBox">
         <DisplayBox />
+      </div>
+
+      <div>
+        <Login />
       </div>
       
     </div>

@@ -8,12 +8,12 @@ const userController = require('../controllers/userController');
 
 //----------Routers to Controllers----------
 router.post('/signup', userController.signup, (req, res) => {
-  return res.status(200).send('Account created.');
+  return res.status(200).send({signedUpStatus: 'Account created.'});
 });
 
 router.post('/login', userController.verifyUser, (req, res) => {
   // return res.status(200).redirect('/');
-  return res.status(200).send('Logged in');
+  return res.status(200).send({loggedInStatus: 'Logged in'});
 });
 
 router.get('/history', apiController.history, (req, res) => {

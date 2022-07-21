@@ -3,13 +3,16 @@ import { setupListeners } from '@reduxjs/toolkit/dist/query'
 
 import { apiSlice } from './reducers/apiSlice'
 import dataReducer from './reducers/data.Slice'
+import loginReducer from './reducers/loginSlice'
 
 // the configuration process for this file, the power of configureStore as a method, and the explanation of getDefaultMiddleware are in RTK documentation 
 export const store = configureStore({
   reducer: {
     data: dataReducer,
     // ensures that caching reducer is added in the right place
-    [apiSlice.reducerPath]: apiSlice.reducer
+    [apiSlice.reducerPath]: apiSlice.reducer,
+
+    login: loginReducer
   },
   middleware: (getDefaultMiddleware) =>
     // enables caching, invalidation, polling, and other useful RTKQuery features
