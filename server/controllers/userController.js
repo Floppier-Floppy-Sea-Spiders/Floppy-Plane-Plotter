@@ -12,8 +12,9 @@ userController.signup = (req, res, next) => {
       console.log(err, 'Caught signup error');
       return next(err);
     }
+
     // console.log('Finished Creating Account');
-    return next();
+    return next()
   });
 };
 
@@ -22,11 +23,13 @@ userController.verifyUser = (req, res, next) => {
   //   console.log(req.body.username);
   db.query(queryString)
     .then((data) => {
+      // console.log('in first .then chain before if statement'); -- from frontend
       let accountInfos = {};
       data.rows.forEach((obj) => {
         accountInfos[obj.username] = obj.password;
       });
       if (accountInfos[req.body.username] === req.body.password) {
+        // console.log('login information found in accountInfos') -- from frontend
         next();
       } else {
         return next({

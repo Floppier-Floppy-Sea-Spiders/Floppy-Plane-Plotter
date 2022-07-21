@@ -50,7 +50,7 @@ const DisplayBox = () => {
     content = <div>{error.toString()}</div>
 
   }
-
+  console.log('content: ', content);
   return (
     <div>
       <section className="planeList">

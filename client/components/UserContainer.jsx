@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginRequest } from '../reducers/loginSlice';
-import { usePostUserQuery } from '../reducers/apiSlice';
+import { usePostUserMutation, useNewUserMutation } from '../reducers/apiSlice';
 
 
 
@@ -19,15 +19,24 @@ function Login () {
             </form>
         </div>
         <div className='loginSignupButton'>
-            <button id='loginButton' type='submit'onClick={(e) => {
+            <button id='loginButton' type='submit' onClick={ async (e) => {
                 e.preventDefault();
                 getUsernameValue();
                 getPassValue();
-                setSkipState(false)
+                // console.log('in button, username: ', usernameValue, 'password: ', passValue);
+                await addUser({username: usernameValue, password: passValue});
             }}>
                 Login
             </button>
-            <button>Sign Up</button>
+
+            <button id='signupButton' type='submit' onClick={ async (e) => {
+                e.preventDefault();
+                getUsernameValue();
+                getPassValue();
+                await newUser({username: usernameValue, password: passValue});
+            }}>
+                Sign Up
+                </button>
         </div>
     </>
     //content would equal the form with the buttons
@@ -35,24 +44,18 @@ function Login () {
     //we can still use the dispatch, but change the payload to a boolean expression
 
     let isLoggedIn = useSelector((state) => state.login.isLoggedIn);
-    const [username, setUsername] = React.useState('');
-    const [password, setPassword] = React.useState('');
-
-    const [skipState, setSkipState] = React.useState(true);
 
     let usernameValue;
     const getUsernameValue = () => {
         usernameValue =  document.getElementById('username').value;
-        console.log('usernameValue: ', usernameValue);
-        setUsername(usernameValue);
+        // setUsername(usernameValue);
         return usernameValue;
     }
     
     let passValue;
     const getPassValue = () => {
         passValue = document.getElementById('password').value;
-        console.log('passvalue: ', passValue)
-        setPassword(passValue);
+        // setPassword(passValue);
         return passValue;
     }
 
@@ -60,25 +63,20 @@ function Login () {
         useDispatch({type: loginRequest.toString(), payload: {isLoggedIn: true}})
     }
 
-    const {
-            data: loggedinStr,
-            isLoading,
-            isSuccess,
-            isError,
-            error,
-    } = usePostUserQuery({username, password}, {refetchOnMountOrArgChange: true, });
+    const [addUser, result] = usePostUserMutation();
+    const [newUser, newUserResult] = useNewUserMutation();
 
-    if (isLoading) {
-        console.log('is loading')
-        content = <p> Is Loading... </p>
-    }
+    // if (result.status) {
+    //     console.log('is loading')
+    //     content = <p> Is Loading... </p>
+    // }
 
-    if (isSuccess) {
+    //for logging in with an already known user
+    if (result.data) {
         dispatchInfo({isLoggedIn: true});
         if (isLoggedIn) {
             console.log('logged in successfully')
-            setSkipState(true);
-            content = <p> {loggedinStr} </p>
+            content = <p> {result.data} </p>
             //plan on setting this to a button to display history or just history without button
         }
         else {
@@ -86,8 +84,25 @@ function Login () {
         }
     }
 
-    if (isError) {
+    if (result.error) {
         content = <p> Error in logging in </p>
+    }
+
+    //for signing up with a new user
+    if (newUserResult.data) {
+        dispatchInfo({isLoggedIn: true});
+        if (isLoggedIn) {
+            console.log('signed up successfully')
+            content = <p> {newUserResult.data} </p>
+            //plan on setting this to a button to display history or just history without button
+        }
+        else {
+            <p>Sign up not successful, username is already in use </p>
+        }
+    }
+    
+    if (newUserResult.error) {
+        content = <p> Error in signing up </p>
     }
 
     // console.log('username: ', usernameValue, ' password: ', passValue);

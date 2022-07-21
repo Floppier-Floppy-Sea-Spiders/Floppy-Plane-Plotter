@@ -4,6 +4,8 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 export const apiSlice = createApi({
   // all of our requests made through these queries will be starting with the /api/ url
   baseQuery: fetchBaseQuery({ baseUrl: '/api/' }),
+
+  tagTypes: [],
   // this determines the endpoints queries will point to
   endpoints: (builder) => ({
     // the 'getPlanes' endpoint is a "query" operation that returns data
@@ -13,15 +15,20 @@ export const apiSlice = createApi({
       query: (input) => `planes/${input}`,
     }),
     
-    postUser: builder.query({
+    postUser: builder.mutation({
     //backend expecting body to be an obj with 2 properties, being 'username' and 'password' to endpoint called /login
-      query: ({username, password}) => ({
+      query: ({ username, password }) => ({
         url: '/login',
         method: "POST",
-        body: {
-          username,
-          password
-        }
+        body: { username: username, password: password }
+      })
+    }),
+
+    newUser: builder.mutation({
+      query: ({username, password}) => ({
+        url: '/signup',
+        method: 'POST',
+        body: { username: username, password: password },
       })
     })
     // you can add more endpoints here with the (name): builder.query syntax
@@ -32,7 +39,7 @@ export const apiSlice = createApi({
 // they handle asynchronicity for you and are extremely simple to write. the naming is automatic:
 // "use" + your constructed query, capitalized "GetPlanes" + Query
 //  if you built a chaseDucks endpoint after getPlanes, it would need to be exported here as useChaseDucksQuery
-export const { useGetPlanesQuery, usePostUserQuery } = apiSlice;
+export const { useGetPlanesQuery, usePostUserMutation, useNewUserMutation } = apiSlice;
 
 /* read more about how this works and why it's so useful here: https://redux.js.org/tutorials/essentials/part-7-rtk-query-basics
 
