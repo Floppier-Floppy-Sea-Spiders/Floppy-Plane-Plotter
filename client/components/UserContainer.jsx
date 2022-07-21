@@ -66,39 +66,50 @@ function Login () {
     const [addUser, result] = usePostUserMutation();
     const [newUser, newUserResult] = useNewUserMutation();
 
-    // if (result.status) {
-    //     console.log('is loading')
-    //     content = <p> Is Loading... </p>
-    // }
+    const {
+        isSuccess,
+        error,
+        data,
+        isLoading,
+        status
+    } = result;
+    
+    console.log('result ln 81:', result);
 
+    if (result.status === 'pending') {
+        console.log('is loading')
+        content = <p> Is Loading... </p>
+    }
     //for logging in with an already known user
-    if (result.data) {
-        dispatchInfo({isLoggedIn: true});
-        if (isLoggedIn) {
+    if (isSuccess) {
+        // console.log('result data: ', result.data)
+        // dispatchInfo({isLoggedIn: true});
+        // console.log('isloggedin after dispatch is called: ', isLoggedIn)
+        // if (isLoggedIn) {
             console.log('logged in successfully')
-            content = <p> {result.data} </p>
+            content = <p> Logged in successfully! </p>
             //plan on setting this to a button to display history or just history without button
-        }
-        else {
-            <p>Login not successful, username and/or password is incorrect </p>
-        }
+    }
+    else {
+        <p>Login not successful, username and/or password is incorrect </p>
     }
 
     if (result.error) {
+        console.log(result);
         content = <p> Error in logging in </p>
     }
 
     //for signing up with a new user
-    if (newUserResult.data) {
-        dispatchInfo({isLoggedIn: true});
-        if (isLoggedIn) {
-            console.log('signed up successfully')
-            content = <p> {newUserResult.data} </p>
+    if (newUserResult.isSuccess) {
+        // console.log('newUserResult data: ', newUserResult.data)
+        // dispatchInfo({isLoggedIn: true});
+        // if (isLoggedIn) {
+            // console.log('signed up successfully')
+            content = <p> {newUserResult.data.signedUpStatus} </p>
             //plan on setting this to a button to display history or just history without button
-        }
-        else {
-            <p>Sign up not successful, username is already in use </p>
-        }
+    }
+    else {
+        <p>Sign up not successful, username is already in use </p>
     }
     
     if (newUserResult.error) {
@@ -106,6 +117,7 @@ function Login () {
     }
 
     // console.log('username: ', usernameValue, ' password: ', passValue);
+    
     return (
         <div>
             {content} 

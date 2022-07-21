@@ -13,23 +13,23 @@ userController.signup = (req, res, next) => {
       return next(err);
     }
 
-    // console.log('Finished Creating Account');
+    console.log('Finished Creating Account');
     return next()
   });
 };
 
 userController.verifyUser = (req, res, next) => {
-  const queryString = `SELECT * FROM "public"."accountinfo" `;
-  //   console.log(req.body.username);
+  const queryString = `SELECT * FROM "public"."users" `;
+  console.log('username in userController.verifyUser: ', req.body.username);
   db.query(queryString)
     .then((data) => {
-      // console.log('in first .then chain before if statement'); -- from frontend
+      // console.log('in first .then chain before if statement'); //-- from frontend
       let accountInfos = {};
       data.rows.forEach((obj) => {
         accountInfos[obj.username] = obj.password;
       });
       if (accountInfos[req.body.username] === req.body.password) {
-        // console.log('login information found in accountInfos') -- from frontend
+        console.log('login information found in accountInfos') //-- from frontend
         next();
       } else {
         return next({
